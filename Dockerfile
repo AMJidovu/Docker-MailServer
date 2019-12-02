@@ -1,4 +1,4 @@
-FROM centos:6.7
+FROM centos:6.9
 
 RUN yum -y update && yum -y install ca-certificates nss
 
@@ -20,7 +20,6 @@ RUN yum -y update && \
     sed -i "s/tsflags=nodocs//g" /etc/yum.conf && \
     yum -y --disablerepo=rpmforge,ius,remi install epel-release && \
     yum -y install tar wget curl htop nano gcc make perl && \
-    yum clean all && \
     wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && \
     tar -zxf openssl-1.1.0f.tar.gz && \
     cd openssl-1.1.0f/ && \
