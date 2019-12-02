@@ -1,4 +1,4 @@
-FROM centos:6.9
+FROM centos:6.10
 
 RUN yum -y update && yum -y install ca-certificates nss
 
