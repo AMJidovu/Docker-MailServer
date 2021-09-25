@@ -10,12 +10,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: 'centos:6.10'
 
   steps:
     - name: Checkout
   uses: actions/checkout@v1
-    - run: commandToBuildYourProject.sh
+      run: |
+        echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin docker.io
+        docker build . --file Dockerfile --tag docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:$GITHUB_SHA
+        docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:$GITHUB_SHA
     - name: Dockerize
   if: success()
     
