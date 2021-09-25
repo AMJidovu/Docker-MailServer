@@ -5,24 +5,26 @@ RUN yum -y update && yum -y install ca-certificates nss
 ADD iRedMail.repo /etc/yum.repos.d/iRedMail.repo
 ADD iRedMail /usr/src/iRedMail/
 
-ARG VERSION="1.6.72"
-ARG RELEASE_DATE="2019-06-26"
+ARG VERSION="1.6.74"
+ARG RELEASE_DATE="2020-04-02"
 ARG RELEASE_DATE_SIGN=""
 
 LABEL onlyoffice.mailserver.release-date="${RELEASE_DATE}" \
       onlyoffice.mailserver.version="${VERSION}" \
       onlyoffice.mailserver.release-date.sign="${RELEASE_DATE_SIGN}" \
-      maintainer="Ascensio System SIA <support@onlyoffice.com>"
-      
+      description="Mail Server is an open-source mail server solution that allows connecting your own domain name to ONLYOFFICE collaboration platform,as well as creating and managing corporate mailboxes."
+      maintainer="Ascensio System SIA <support@onlyoffice.com>" \
+      securitytxt="https://www.onlyoffice.com/.well-known/security.txt"
+
 RUN yum -y update && \
     yum -y install yum-plugin-ovl && \
     yum clean metadata && \
     sed -i "s/tsflags=nodocs//g" /etc/yum.conf && \
     yum -y --disablerepo=rpmforge,ius,remi install epel-release && \
     yum -y install tar wget curl htop nano gcc make perl && \
-    wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && \
-    tar -zxf openssl-1.1.0f.tar.gz && \
-    cd openssl-1.1.0f/ && \
+    wget https://www.openssl.org/source/openssl-1.1.1f.tar.gz && \
+    tar -zxf openssl-1.1.1f.tar.gz && \
+    cd openssl-1.1.1f/ && \
     ./config && \
     make && \
     make install && \
@@ -44,6 +46,7 @@ RUN yum -y update && \
     chmod 755 /usr/src/iRedMail/pkgs_install.sh && \
     chmod 755 /usr/src/iRedMail/iRedMail.sh && \
     chmod 755 /usr/src/iRedMail/run_mailserver.sh  && \
+    chmod 755 /usr/src/iRedMail/install_mail.sh  && \
     bash /usr/src/iRedMail/pkgs_install.sh && \
     mkdir -p /etc/pki/tls/mailserver /var/vmail && \
     pip install -r /usr/src/iRedMail/tools/scripts/requirements.txt && \
@@ -66,5 +69,4 @@ EXPOSE 4190
 
 CMD export CONFIGURATION_ONLY='YES' && \
     export USE_DOCKER='YES' && \
-    bash -C '/usr/src/iRedMail/iRedMail.sh' && \
-    bash -C '/usr/src/iRedMail/run_mailserver.sh';'bash'
+    bash -C '/usr/src/iRedMail/install_mail.sh';
