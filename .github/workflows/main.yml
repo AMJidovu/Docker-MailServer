@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: centos-6.10
+    runs-on: centos
 
     steps:
     - uses: actions/checkout@v2
