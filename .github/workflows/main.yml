@@ -10,8 +10,11 @@ jobs:
 
   build:
 
-    container: 'centos:6.10'
     runs-on: ubuntu-latest
+    
+    container:
+      image: 'centos:6.10'
+      options: --user root
     
     steps:
     - uses: actions/checkout@v1
