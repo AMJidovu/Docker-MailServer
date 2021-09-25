@@ -1,21 +1,24 @@
-name: Docker Image CI
+name: ci
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
-
-  build:
-
+  qemu:
     runs-on: ubuntu-latest
-    container: 'centos:6.10'
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+      -
+        name: Available platforms
       run: |
         echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin docker.io
         docker build . --file Dockerfile --tag docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:$GITHUB_SHA
