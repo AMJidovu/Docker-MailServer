@@ -1,5 +1,4 @@
-name: Docker Setup QEMU
-
+name: CI
 on:
   push:
     branches: [ master ]
@@ -14,6 +13,13 @@ jobs:
     container: 'centos:6.10'
 
     steps:
-    - uses: docker/setup-qemu-action@v1.2.0
-    - name: Build the Docker image
-      run:
+  - name: Checkout
+    uses: actions/checkout@v1
+  - run: commandToBuildYourProject.sh
+  - name: Dockerize
+    if: success()
+    uses: manusa/actions-publish-docker@v1.1.2
+    with:
+      name: organization/image_name
+      username: ${{ secrets.DOCKER_HUB_USER }}
+      password: ${{ secrets.DOCKER_HUB_PASSWORD }}
